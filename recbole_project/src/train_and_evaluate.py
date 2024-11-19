@@ -1,4 +1,5 @@
 # src/train_and_evaluate.py
+
 import pandas as pd
 import os
 import glob
@@ -15,15 +16,15 @@ from recbole.utils import get_model, get_trainer
 import warnings
 warnings.filterwarnings('ignore')
     
-def main():
+def run(model_type, model):
     
     # configurations initialization
-    config_file = ["configs/general/bpr_config.yaml"]
-    config = Config(model='BPR', dataset='dataset', config_file_list=config_file)
-    # print(config['MODEL_TYPE'], config['model'])
+    config_file = [f"configs/{model_type.lower()}/{model.lower()}_config.yaml"]
+
+    config = Config(model=model, dataset='dataset', config_file_list=config_file)
     
     # init random seed
-    # init_seed(config['seed'], config['reproducibility'])
+    init_seed(config['seed'], config['reproducibility'])
     
     # logger initialization
     init_logger(config)
@@ -85,6 +86,5 @@ def main():
         recommended_df = pd.concat([recommended_df, temp_df], ignore_index=True)
         
     recommended_df = recommended_df.explode('item').reset_index(drop=True)
-    recommended_df.to_csv(os.path.join(config['output_data_path'], f"output_{checkpoint_path.split('/')[-1][:-4]}.csv"))
-if __name__ == '__main__':
-    main()
+    recommended_df.to_csv(os.path.join(config['output_data_path'], f"output_E{config['epochs']}_{checkpoint_path.split('/')[-1][:-4]}.csv"), index=False)
+
