@@ -1,0 +1,35 @@
+# configs/general/pop_config.yaml
+
+model: Pop
+dataset: dataset
+data_path: ./data/processed/
+
+# 필드 설정
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+
+# 로드할 컬럼 지정
+load_col:
+  inter: [user_id, item_id]
+  item: [item_id]
+
+# 평가 설정
+metrics: ['Recall', 'NDCG']
+topk: [10]
+valid_metric: Recall@10
+eval_batch_size: 4096
+eval_args:
+  split: {'RS': [0.8, 0.1, 0.1]}
+  group_by: user
+  order: RO
+  mode: {'valid': 'full', 'test': 'full'}
+repeatable: False
+
+# 기타 설정
+seed: 42
+device: 'cuda:0'  # GPU 사용 시 'cuda:0', CPU 사용 시 'cpu'
+checkpoint_dir: './models/saved/'
+show_progress: True
+train_neg_sample_args:
+  distribution: 'uniform'
+  sample_num: 1

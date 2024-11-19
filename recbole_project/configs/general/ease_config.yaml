@@ -1,0 +1,38 @@
+# configs/general/ease_config.yaml
+
+model: EASE
+dataset: dataset
+data_path: ./data/processed/
+
+# 필드 설정
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+
+# 로드할 컬럼 지정
+load_col:
+  inter: [user_id, item_id]
+  item: [item_id]
+
+# 모델 하이퍼파라미터
+reg_weight: 50.0  # 정규화 가중치
+
+# 학습 설정
+epochs: 10
+train_batch_size: 2048
+
+# 평가 설정
+metrics: ['Recall', 'NDCG']
+topk: [10]
+valid_metric: NDCG@10
+eval_batch_size: 4096
+eval_args:
+  split: {'RS': [0.8, 0.1, 0.1]}
+  group_by: user
+  order: RO
+  mode: {'valid': 'full', 'test': 'full'}
+repeatable: True
+
+# 기타 설정
+seed: 42
+device: 'cpu'  # 또는 'cuda:0'
+checkpoint_dir: './models/saved/'

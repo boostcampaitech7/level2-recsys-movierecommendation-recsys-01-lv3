@@ -1,0 +1,44 @@
+# configs/general/lightgcn_config.yaml
+
+model: LightGCN
+dataset: dataset
+data_path: ./data/processed/
+
+# 필드 설정
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+
+# 로드할 컬럼 지정
+load_col:
+  inter: [user_id, item_id]
+  item: [item_id]
+
+# 모델 하이퍼파라미터
+embedding_size: 64
+n_layers: 3
+
+# 학습 설정
+epochs: 1
+train_batch_size: 1024
+learner: adam
+learning_rate: 0.001
+stopping_step: 10
+neg_sampling: {'uniform': 1}
+
+# 평가 설정
+metrics: ['Recall', 'NDCG']
+topk: [10]
+valid_metric: Recall@10
+eval_batch_size: 4096
+eval_args:
+  split: {'RS': [0.8, 0.1, 0.1]}
+  group_by: user
+  order: RO
+  mode: {'valid': 'full', 'test': 'full'}
+repeatable: False
+
+# 기타 설정
+seed: 42
+device: 'cpu'  # 또는 'cuda:0'
+checkpoint_dir: './models/saved/'
+saved_dataset: True
