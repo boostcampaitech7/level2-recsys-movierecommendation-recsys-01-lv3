@@ -28,6 +28,7 @@ def run(model_type, model):
         config = Config(model=model, dataset='dataset', config_file_list=config_file)
     
     # MLflow experiment 초기화
+    mlflow.set_tracking_uri("http://10.28.224.95:30696")
     mlflow.set_experiment("rebole_project_experiment")
     with mlflow.start_run(run_name=f"{model_type}_{model}") as run:
         mlflow.log_params({key: config[key] for key in config.final_config_dict.keys()})

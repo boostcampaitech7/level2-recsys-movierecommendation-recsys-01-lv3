@@ -12,3 +12,6 @@ RecBole_Use/
 RecBole_Use2/
 *.pyc
 /mlruns/
+EDA_*/
+RecBole/
+mlruns/
