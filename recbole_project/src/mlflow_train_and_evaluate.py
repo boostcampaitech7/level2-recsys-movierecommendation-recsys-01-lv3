@@ -104,7 +104,7 @@ def run(model_type, model):
         test_data = sample_submission.copy()
         checkpoint_dir = os.path.join(config['checkpoint_dir'], config['model'])
         model_name = config['model']
-        checkpoint_pattern = os.path.join(checkpoint_dir, config['model'], f"{model_name}-*.pth")
+        checkpoint_pattern = os.path.join(checkpoint_dir, f"{model_name}-*.pth")
         checkpoint_files = glob.glob(checkpoint_pattern)
         if not checkpoint_files:
             print(f"Checkpoint files not found in {checkpoint_dir} with pattern {checkpoint_pattern}")
