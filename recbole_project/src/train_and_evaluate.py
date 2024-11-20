@@ -20,9 +20,11 @@ def run(model_type, model):
     
     # configurations initialization
     config_file = [f"configs/{model_type.lower()}/{model.lower()}_config.yaml"]
-
-    config = Config(model=model, dataset='dataset', config_file_list=config_file)
-    
+    if model_type.lower() == 'context': 
+        config = Config(model=model, dataset='dataset_context', config_file_list=config_file)
+    else:
+        config = Config(model=model, dataset='dataset', config_file_list=config_file)
+            
     # init random seed
     init_seed(config['seed'], config['reproducibility'])
     
