@@ -73,10 +73,9 @@ def run(model_type, model):
 
             # 2. Validation 실행
             valid_score, valid_result = trainer._valid_epoch(valid_data, show_progress=True)
-            mlflow.log_metric("valid_score", valid_score, step=epoch)
             for metric, value in valid_result.items():
                 sanitized_metric = metric.replace("@", "_")  # '@'를 '_'로 변경
-                mlflow.log_metric(f"valid_{sanitized_metric}", value, step=epoch)
+                mlflow.log_metric(f"{sanitized_metric}", value, step=epoch)
             
             metric_log = ""
             for metric in config['metrics']:
@@ -95,14 +94,7 @@ def run(model_type, model):
             # 3. 최적 모델 갱신
             if best_valid_score is None or valid_score > best_valid_score:
                 best_valid_score = valid_score
-                trainer._save_checkpoint(epoch, saved_model_file=first_checkpoint_path)    
-            print(f"")   
-            
-        # # Best Validation Score 기록
-        # best_valid_result_sanitized = {key.replace("@", "_"): value for key, value in best_valid_result.items()}
-        # mlflow.log_metrics(best_valid_result_sanitized)
-        # 최적 Validation Score 로깅
-        mlflow.log_metric("best_valid_score", best_valid_score)
+                trainer._save_checkpoint(epoch, saved_model_file=first_checkpoint_path)                
 
         # MLflow로 모델 로깅
         mlflow.pytorch.log_model(model, "best_model")  # Best 모델 저장   
