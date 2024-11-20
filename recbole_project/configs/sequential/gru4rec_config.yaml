@@ -55,7 +55,7 @@ repeatable: True               # (bool) Whether to evaluate results with a repea
 # metrics: ["Recall","MRR","NDCG","Hit","Precision"]  # (list or str) Evaluation metrics.
 metrics: ["Recall","NDCG"]
 topk: [10]                      # (list or int or None) The value of k for topk evaluation metrics.
-valid_metric: NDCG@10            # (str) The evaluation metric for early stopping. 
+valid_metric: Recall@10            # (str) The evaluation metric for early stopping. 
 valid_metric_bigger: True       # (bool) Whether to take a bigger valid metric value as a better result.
 eval_batch_size: 4096           # (int) The evaluation batch size.
 metric_decimal_place: 4         # (int) The decimal place of metric scores.
@@ -63,7 +63,7 @@ metric_decimal_place: 4         # (int) The decimal place of metric scores.
 eval_path: './data/raw/eval/'
 
 # Training Settings
-epochs: 20                     # (int) The number of training epochs.
+epochs: 10                     # (int) The number of training epochs.
 train_batch_size: 4096          # (int) The training batch size.
 learner: adam                   # (str) The name of used optimizer.
 learning_rate: 0.001            # (float) Learning rate.
