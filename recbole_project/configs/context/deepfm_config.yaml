@@ -30,7 +30,7 @@ train_neg_sample_args:          # (dict) Arguments for negative sampling during 
   sample_num: 1                 # (int) Number of negative samples per positive sample.
 valid_neg_sample_args:          # (dict) Arguments for negative sampling during validation.
   distribution: 'uniform'       # (str) Sampling distribution: 'uniform' or 'popularity'
-  sample_num: 10               # (int) Number of negative samples per positive sample in validation.
+  sample_num: 1               # (int) Number of negative samples per positive sample in validation.
 
 
 # Evaluation Settings
