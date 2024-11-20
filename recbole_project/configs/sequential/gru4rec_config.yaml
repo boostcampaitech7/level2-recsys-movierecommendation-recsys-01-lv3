@@ -4,7 +4,7 @@ embedding_size: 64              # (int) The embedding size of items.
 hidden_size: 128                # (int) The number of features in the hidden state. 
 num_layers: 1                   # (int) The number of layers in GRU.
 dropout_prob: 0.3               # (float) The dropout rate.
-loss_type: 'BPR'                 # (str) The type of loss function. Range in ['BPR', 'CE'].
+# loss_type: 'BPR'                 # (str) The type of loss function. Range in ['BPR', 'CE'].
 
 # Atomic File Format
 field_separator: "\t"           # (str) Separator of different columns in atomic files.
@@ -22,6 +22,8 @@ seq_len: ~                      # (dict) Field name of sequence feature: maximum
 LABEL_FIELD: ~                  # (str) Expected field name of the generated labels for point-wise dataLoaders. 
 threshold: ~                    # (dict) 0/1 labels will be generated according to the pairs.
 NEG_PREFIX: neg_                # (str) Negative sampling prefix for pair-wise dataLoaders.
+user_inter_num_interval: "[0,inf)"
+item_inter_num_interval: "[0,inf)"
 
 # Selectively Loading
 load_col:                       # (dict) The suffix of atomic files: (list) field names to be loaded.
@@ -32,20 +34,20 @@ load_col:                       # (dict) The suffix of atomic files: (list) fiel
 filter_inter_by_user_or_item: True    # (bool) Whether or not to filter inter by user or item.
 
 # Preprocessing
-normalize_all: True             # (bool) Whether or not to normalize all the float like fields.
+# normalize_all: True             # (bool) Whether or not to normalize all the float like fields.
 
 # Negative Sampling for Implicit Feedback
 # train_neg_sample_args: ~
-train_neg_sample_args:          # (dict) Arguments for negative sampling during training.
-  distribution: 'uniform'       # (str) Sampling distribution: 'uniform' or 'popularity'
-  sample_num: 1                 # (int) Number of negative samples per positive sample.
-valid_neg_sample_args:          # (dict) Arguments for negative sampling during validation.
-  distribution: 'uniform'       # (str) Sampling distribution: 'uniform' or 'popularity'
-  sample_num: 10               # (int) Number of negative samples per positive sample in validation.
+# train_neg_sample_args:          # (dict) Arguments for negative sampling during training.
+#   distribution: 'uniform'       # (str) Sampling distribution: 'uniform' or 'popularity'
+#   sample_num: 1                 # (int) Number of negative samples per positive sample.
+# valid_neg_sample_args:          # (dict) Arguments for negative sampling during validation.
+#   distribution: 'uniform'       # (str) Sampling distribution: 'uniform' or 'popularity'
+#   sample_num: 10               # (int) Number of negative samples per positive sample in validation.
 
 # Evaluation Settings
 eval_args:                      # (dict) 4 keys: group_by, order, split, and mode
-  split: {'LS': 'valid_and_test'}   # (dict) The splitting strategy ranging in ['RS','LS'].
+  split: {'LS': 'valid_only'}   # (dict) The splitting strategy ranging in ['RS','LS'].
   group_by: user                # (str) The grouping strategy ranging in ['user', 'none'].
   order: TO                     # (str) The ordering strategy ranging in ['RO', 'TO'].
   mode: full                    # (str) The evaluation mode ranging in ['full','unixxx','popxxx','labeled'].
@@ -53,7 +55,7 @@ repeatable: True               # (bool) Whether to evaluate results with a repea
 # metrics: ["Recall","MRR","NDCG","Hit","Precision"]  # (list or str) Evaluation metrics.
 metrics: ["Recall","NDCG"]
 topk: [10]                      # (list or int or None) The value of k for topk evaluation metrics.
-valid_metric: Recall@10            # (str) The evaluation metric for early stopping. 
+valid_metric: NDCG@10            # (str) The evaluation metric for early stopping. 
 valid_metric_bigger: True       # (bool) Whether to take a bigger valid metric value as a better result.
 eval_batch_size: 4096           # (int) The evaluation batch size.
 metric_decimal_place: 4         # (int) The decimal place of metric scores.
@@ -61,10 +63,11 @@ metric_decimal_place: 4         # (int) The decimal place of metric scores.
 eval_path: './data/raw/eval/'
 
 # Training Settings
-epochs: 30                     # (int) The number of training epochs.
+epochs: 20                     # (int) The number of training epochs.
 train_batch_size: 4096          # (int) The training batch size.
 learner: adam                   # (str) The name of used optimizer.
 learning_rate: 0.001            # (float) Learning rate.
+train_neg_sample_args: ~
 # train_neg_sample_args:          # (dict) Negative sampling configuration for model training.
 #   distribution: uniform         # (str) The distribution of negative items.
 #   sample_num: 3                 # (int) The sampled num of negative items.

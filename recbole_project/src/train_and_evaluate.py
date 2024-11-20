@@ -31,11 +31,11 @@ def run(model_type, model):
     logger = getLogger()
     
     # write config info into log
-    logger.info(config)
+    logger.info(config) 
     
     # # dataset creating and filtering
     dataset = create_dataset(config)
-    logger.info(dataset)
+    # logger.info(dataset)
     
     # # dataset splitting
     train_data, valid_data, test_data = data_preparation(config, dataset)
@@ -64,8 +64,8 @@ def run(model_type, model):
     checkpoint_path = max(checkpoint_files, key=os.path.getmtime)
     print(f"Loading model from {checkpoint_path}")
     
-    general_hyper_params, model, dataset, train_data_loader, valid_data_loader, test_data_loader = load_data_and_model(model_file=checkpoint_path)
-    model.to(config['device'])
+    general_hyper_params, best_model, dataset, train_data_loader, valid_data_loader, test_data_loader = load_data_and_model(model_file=checkpoint_path)
+    best_model.to(config['device'])
     
     test_data.columns = ['user_id', 'item_id']
     test_users = test_data['user_id'].unique().tolist()
@@ -79,7 +79,7 @@ def run(model_type, model):
         batch_indices = uid_series[i:i+batch_size]
         batch_users = test_users[i:i+batch_size]
         
-        topk_iid_list_batch = full_sort_topk(batch_indices, model, valid_data_loader, k=10, device=config['device'])
+        topk_iid_list_batch = full_sort_topk(batch_indices, best_model, valid_data_loader, k=10, device=config['device'])
         last_topk_iid_list = topk_iid_list_batch.indices
         recommended_item_list = dataset.id2token(dataset.iid_field, last_topk_iid_list.cpu()).tolist()
         temp_df = pd.DataFrame({'user': batch_users, 'item': recommended_item_list})
@@ -87,4 +87,3 @@ def run(model_type, model):
         
     recommended_df = recommended_df.explode('item').reset_index(drop=True)
     recommended_df.to_csv(os.path.join(config['output_data_path'], f"output_E{config['epochs']}_{checkpoint_path.split('/')[-1][:-4]}.csv"), index=False)
-
