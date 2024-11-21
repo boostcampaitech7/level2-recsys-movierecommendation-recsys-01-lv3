@@ -1,8 +1,11 @@
 # Model Setting
-model: LightGCN
-embedding_size: 64                     # (int) The embedding size of users and items.
-n_layers: 2                            # (int) The number of layers in LightGCN.
-reg_weight: 1e-05                      # (float) The L2 regularization weight.
+model: SLIMElastic
+alpha: 0.2                             # (float) Control the balance between L1 and L2 norm.
+l1_ratio: 0.02                         # (float) Control the balance between L1 and L2 norm.
+                                       # The weight of L1-norm is equal to alpha * l1_ratio. 
+                                       # The weight of L2-norm is 1/2 * alpha * (1 - l1_ratio).
+positive_only: True                    # (bool) Whether to add the non-negativity constraint. 
+hide_item: True                        # (bool) Whether to ignore the influence of the item itself.
 
 # Atomic File Format
 field_separator: "\t"                  # (str) Separator of different columns in atomic files.

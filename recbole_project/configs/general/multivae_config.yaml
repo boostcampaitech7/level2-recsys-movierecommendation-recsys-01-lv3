@@ -1,8 +1,10 @@
 # Model Setting
-model: LightGCN
-embedding_size: 64                     # (int) The embedding size of users and items.
-n_layers: 2                            # (int) The number of layers in LightGCN.
-reg_weight: 1e-05                      # (float) The L2 regularization weight.
+model: Multivae
+mlp_hidden_size: [600]                 # (list of int) The MLP hidden layer.
+latent_dimension: 128                  # (int) The latent dimension of auto-encoder.
+dropout_prob: 0.5                      # (float) The drop out probability of input.  
+anneal_cap: 0.2                        # (float) The hyper parameter of the weight of KL loss. 
+total_anneal_steps: 200000             # (int) The maximum steps of anneal update.
 
 # Atomic File Format
 field_separator: "\t"                  # (str) Separator of different columns in atomic files.
@@ -53,7 +55,7 @@ metric_decimal_place: 4                # (int) The decimal place of metric score
 eval_path: './data/raw/eval/'          # sample_submission.csv 디렉토리 설정
 
 # Training Settings
-epochs: 2                              # (int) The number of training epochs.
+epochs: 5                              # (int) The number of training epochs.
 train_batch_size: 2048                 # (int) The training batch size.
 learner: adam                          # (str) The name of used optimizer.
 learning_rate: 0.001                   # (float) Learning rate.

@@ -1,8 +1,18 @@
 # Model Setting
-model: LightGCN
-embedding_size: 64                     # (int) The embedding size of users and items.
-n_layers: 2                            # (int) The number of layers in LightGCN.
-reg_weight: 1e-05                      # (float) The L2 regularization weight.
+model: BERT4Rec
+n_layers: 2                            # (int) The number of transformer layers in transformer encoder.
+n_heads: 2                             # (int) The number of attention heads for multi-head attention layer.
+hidden_size: 64                        # (int) The number of features in the hidden state.
+inner_size: 256                        # (int) The inner hidden size in feed-forward layer.
+hidden_dropout_prob: 0.2               # (float) The probability of an element to be zeroed.
+attn_dropout_prob: 0.2                 # (float) The probability of an attention score to be zeroed.
+hidden_act: 'gelu'                     # (str) The activation function in feed-forward layer.
+layer_norm_eps: 1e-12                  # (float) A value added to the denominator for numerical stability.
+initializer_range: 0.02                # (float) The standard deviation for normal initialization.
+mask_ratio: 0.2                        # (float) The probability for a item replaced by MASK token.
+loss_type: 'CE'                        # (str) The type of loss function.
+transform: mask_itemseq                # (str) The transform operation for batch data process.
+ft_ratio: 0.5                          # (float) The probability of generating fine-tuning samples
 
 # Atomic File Format
 field_separator: "\t"                  # (str) Separator of different columns in atomic files.
@@ -13,10 +23,15 @@ USER_ID_FIELD: user_id                 # (str) Field name of user ID feature.
 ITEM_ID_FIELD: item_id                 # (str) Field name of item ID feature.
 RATING_FIELD: ~                        # (str) Field name of rating feature.
 TIME_FIELD: timestamp                  # (str) Field name of timestamp feature.
+ITEM_LIST_LENGTH_FIELD: item_length
+LIST_SUFFIX: _list
+MAX_ITEM_LIST_LENGTH: 50
 seq_len: ~                             # (dict) Field name of sequence feature: maximum length of each sequence
 LABEL_FIELD: ~                         # (str) Expected field name of the generated labels for point-wise dataLoaders. 
 threshold: ~                           # (dict) 0/1 labels will be generated according to the pairs.
 NEG_PREFIX: neg_                       # (str) Negative sampling prefix for pair-wise dataLoaders.
+user_inter_num_interval: "[0,inf)"
+item_inter_num_interval: "[0,inf)"
 
 # Selectively Loading
 load_col:                              # (dict) The suffix of atomic files: (list) field names to be loaded.
@@ -26,24 +41,13 @@ load_col:                              # (dict) The suffix of atomic files: (lis
 # Filtering
 filter_inter_by_user_or_item: True     # (bool) Whether or not to filter inter by user or item.
 
-# Preprocessing
-normalize_all: True                    # (bool) Whether or not to normalize all the float like fields.
-
-# Negative Sampling for Implicit Feedback
-train_neg_sample_args:                 # (dict) Arguments for negative sampling during training.
-  distribution: 'uniform'              # (str) Sampling distribution: 'uniform' or 'popularity'
-  sample_num: 1                        # (int) Number of negative samples per positive sample.
-valid_neg_sample_args:                 # (dict) Arguments for negative sampling during validation.
-  distribution: 'uniform'              # (str) Sampling distribution: 'uniform' or 'popularity'
-  sample_num: 10                       # (int) Number of negative samples per positive sample in validation.
-
 # Evaluation Settings
 eval_args:                             # (dict) 4 keys: group_by, order, split, and mode
-  split: {'RS':[0.99,0.01,0]}          # (dict) The splitting strategy ranging in ['RS','LS'].
+  split: {'LS': 'valid_only'}          # (dict) The splitting strategy ranging in ['RS','LS'].
   group_by: user                       # (str) The grouping strategy ranging in ['user', 'none'].
-  order: RO                            # (str) The ordering strategy ranging in ['RO', 'TO'].
+  order: TO                            # (str) The ordering strategy ranging in ['RO', 'TO'].
   mode: full                           # (str) The evaluation mode ranging in ['full','unixxx','popxxx','labeled'].
-repeatable: False                      # (bool) Whether to evaluate results with a repeatable recommendation scene. 
+repeatable: True                       # (bool) Whether to evaluate results with a repeatable recommendation scene. 
 metrics: ["Recall","NDCG"]             # (list or str) Evaluation metrics.
 topk: [10]                             # (list or int or None) The value of k for topk evaluation metrics.
 valid_metric: Recall@10                # (str) The evaluation metric for early stopping. 
@@ -53,21 +57,21 @@ metric_decimal_place: 4                # (int) The decimal place of metric score
 eval_path: './data/raw/eval/'          # sample_submission.csv 디렉토리 설정
 
 # Training Settings
-epochs: 2                              # (int) The number of training epochs.
-train_batch_size: 2048                 # (int) The training batch size.
+epochs: 10                             # (int) The number of training epochs.
+train_batch_size: 4096                 # (int) The training batch size.
 learner: adam                          # (str) The name of used optimizer.
 learning_rate: 0.001                   # (float) Learning rate.
+train_neg_sample_args: ~
 eval_step: 1                           # (int) The number of training epochs before an evaluation on the valid dataset.
-stopping_step: 10                      # (int) The threshold for validation-based early stopping.
+stopping_step: 3                       # (int) The threshold for validation-based early stopping.
 clip_grad_norm: ~                      # (dict) The args of clip_grad_norm_ which will clip gradient norm of model. 
 weight_decay: 0.0                      # (float) The weight decay value (L2 penalty) for optimizers.
 loss_decimal_place: 4                  # (int) The decimal place of training loss.
 require_pow: False                     # (bool) Whether or not to perform power operation in EmbLoss.
 enable_amp: False                      # (bool) Whether or not to use mixed precision training.
 enable_scaler: False                   # (bool) Whether or not to use GradScaler in mixed precision training.
-transform: ~                           # (str) The transform operation for batch data process.
 
-# Environment Settings
+# Environment Settings       
 device: cuda
 gpu_id: '0'                            # (str) The id of GPU device(s).
 worker: 0                              # (int) The number of workers processing the data.
