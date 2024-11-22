@@ -47,7 +47,6 @@ def run(data_type, model_type, model):
     
         # write config info into log
         # logger.info(config)
-        print("--- %.4f seconds ---" % (time.time() - start)) 
 
         # dataset creating and filtering
         dataset = create_dataset(config)
