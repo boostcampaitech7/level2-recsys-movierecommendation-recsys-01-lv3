@@ -31,7 +31,7 @@ def run(data_type, model_type, model):
     
     # MLflow experiment 초기화
     mlflow.set_tracking_uri("http://10.28.224.95:30696")
-    mlflow.set_experiment("rebole_project_experiment")
+    mlflow.set_experiment("RecBole_model_ALL")
     
     with mlflow.start_run(run_name=f"{model_type}_{model}") as run:
 
@@ -73,6 +73,7 @@ def run(data_type, model_type, model):
             
         # model training
         best_valid_score, best_valid_result = None, None
+        best_epoch = None
         early_stop_epoch = None
         for epoch in range(config['epochs']):
             # 1. Train Epoch 실행
@@ -105,7 +106,7 @@ def run(data_type, model_type, model):
                 if best_valid_score is None or valid_score > best_valid_score:
                     best_valid_score = valid_score
                     best_valid_result = valid_result
-                    # trainer._save_checkpoint(epoch, saved_model_file=first_checkpoint_path)
+                    best_epoch = epoch
                     stopping_counter = 0  # 개선이 되었으므로 카운터 리셋
                 else:
                     stopping_counter += 1  # 개선이 없었으므로 카운터 증가       
@@ -117,8 +118,8 @@ def run(data_type, model_type, model):
                     break        
         # Early stopping이 발생하지 않았다면, 전체 에폭 수 저장
         if early_stop_epoch is None:
-            early_stop_epoch = config['epochs']   
-        trainer._save_checkpoint(early_stop_epoch, saved_model_file=first_checkpoint_path)
+            early_stop_epoch = config['epochs'] 
+        trainer._save_checkpoint(best_epoch, saved_model_file=first_checkpoint_path)
         # early_stop_epoch를 MLflow에 로그 기록
         mlflow.log_param("early_stop_epoch", early_stop_epoch)  
         
