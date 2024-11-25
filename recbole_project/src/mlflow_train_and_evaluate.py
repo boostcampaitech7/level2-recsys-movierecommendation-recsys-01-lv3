@@ -12,7 +12,6 @@ from recbole.quick_start import load_data_and_model
 from logging import getLogger
 from recbole.config import Config
 from recbole.data import create_dataset, data_preparation
-from recbole.model.general_recommender import BPR
 from recbole.trainer import Trainer
 from recbole.utils import init_seed, init_logger
 from recbole.utils import get_model, get_trainer, get_local_time
@@ -49,6 +48,7 @@ def run(data_type, model_type, model):
         # logger.info(config)
 
         # dataset creating and filtering
+        print("현재: 데이터 구성")
         dataset = create_dataset(config)
         # logger.info(dataset)
 
@@ -56,6 +56,7 @@ def run(data_type, model_type, model):
         train_data, valid_data, test_data = data_preparation(config, dataset)
         
         # model loading and initialization
+        print("현재: 모델 구성")
         model = get_model(config['model'])(config, train_data.dataset).to(config['device'])
         # logger.info(model)
 
@@ -72,7 +73,7 @@ def run(data_type, model_type, model):
             
         # model training
         best_valid_score, best_valid_result = None, None
-
+        early_stop_epoch = None
         for epoch in range(config['epochs']):
             # 1. Train Epoch 실행
             train_loss = trainer._train_epoch(train_data, epoch_idx=epoch, show_progress=True)
@@ -104,7 +105,7 @@ def run(data_type, model_type, model):
                 if best_valid_score is None or valid_score > best_valid_score:
                     best_valid_score = valid_score
                     best_valid_result = valid_result
-                    trainer._save_checkpoint(epoch, saved_model_file=first_checkpoint_path)
+                    # trainer._save_checkpoint(epoch, saved_model_file=first_checkpoint_path)
                     stopping_counter = 0  # 개선이 되었으므로 카운터 리셋
                 else:
                     stopping_counter += 1  # 개선이 없었으므로 카운터 증가       
@@ -117,10 +118,9 @@ def run(data_type, model_type, model):
         # Early stopping이 발생하지 않았다면, 전체 에폭 수 저장
         if early_stop_epoch is None:
             early_stop_epoch = config['epochs']   
-        
+        trainer._save_checkpoint(early_stop_epoch, saved_model_file=first_checkpoint_path)
         # early_stop_epoch를 MLflow에 로그 기록
         mlflow.log_param("early_stop_epoch", early_stop_epoch)  
         
         # MLflow로 모델 로깅
         # mlflow.pytorch.log_model(model, "best_model")  # Best 모델 저장 
-        
