@@ -47,10 +47,10 @@ def inference(config):
     
     # Early stopping epoch 가져오기
     if checkpoint.get('epoch', config['epochs']) == 0:
-        early_stop_epoch = 1
+        best_epoch = 1
     else: 
-        early_stop_epoch = checkpoint.get('epoch', config['epochs'])
-    print(f"Early stopping epoch: {early_stop_epoch}")
+        best_epoch = checkpoint.get('epoch', config['epochs'])
+    print(f"Best epoch: {best_epoch}")
     
     # 전체 데이터셋으로 재학습
     print("현재: 전체 데이터셋으로 재학습 시작")
@@ -59,9 +59,9 @@ def inference(config):
     trainer = get_trainer(config['MODEL_TYPE'], config['model'])(config, best_model)
 
     # 전체 데이터로 재학습
-    for epoch in range(early_stop_epoch):
+    for epoch in range(best_epoch):
         train_loss = trainer._train_epoch(full_train_data, epoch_idx=epoch, show_progress=False)
-        print(f"Epoch {epoch+1}/{early_stop_epoch}, Train Loss: {train_loss:.4f}")
+        print(f"Epoch {epoch+1}/{best_epoch}, Train Loss: {train_loss:.4f}")
     
     # Inference 시작
     sample_submission.columns = ['user_id', 'item_id']
@@ -85,13 +85,7 @@ def inference(config):
     output_dir = os.path.join(config['output_data_path'], config['model'])
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    if early_stop_epoch == config['epochs']:
-        recommended_df.to_csv(
-            os.path.join(output_dir, f"output_{checkpoint_path.split('/')[-1][:-4]}_epoch{early_stop_epoch}.csv"), 
-            index=False
-        )
-    else:
-        recommended_df.to_csv(
-            os.path.join(output_dir, f"output_{checkpoint_path.split('/')[-1][:-4]}_early_stop{early_stop_epoch}.csv"), 
-            index=False
-        )
+    recommended_df.to_csv(
+        os.path.join(output_dir, f"output_{checkpoint_path.split('/')[-1][:-4]}_epoch{best_epoch}.csv"), 
+        index=False
+    )
