@@ -115,13 +115,14 @@ def run(data_type, model_type, model):
                 if stopping_counter >= config['stopping_step']:
                     early_stop_epoch = epoch + 1  # Early stopping이 발생한 에폭 번호 저장
                     print(f"Early stopping triggered after {epoch+1} epochs.")
-                    break        
+                    break 
+     
         # Early stopping이 발생하지 않았다면, 전체 에폭 수 저장
         if early_stop_epoch is None:
             early_stop_epoch = config['epochs'] 
         trainer._save_checkpoint(best_epoch, saved_model_file=first_checkpoint_path)
         # early_stop_epoch를 MLflow에 로그 기록
-        mlflow.log_param("early_stop_epoch", early_stop_epoch)  
-        
+        mlflow.log_param("early_stop_epoch", early_stop_epoch) 
+        mlflow.log_param("best recall_10", best_valid_score)
         # MLflow로 모델 로깅
         # mlflow.pytorch.log_model(model, "best_model")  # Best 모델 저장 

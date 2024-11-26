@@ -46,22 +46,23 @@ def inference(config):
     best_model.to(config['device'])
     
     # Early stopping epoch 가져오기
-    if checkpoint.get('epoch', config['epochs']) == 0:
-        best_epoch = 1
-    else: 
-        best_epoch = checkpoint.get('epoch', config['epochs'])
+    # if checkpoint.get('epoch', config['epochs']) == 0:
+    #     best_epoch = 1
+    # else: 
+    #     best_epoch = checkpoint.get('epoch', config['epochs'])
+    best_epoch = checkpoint.get('epoch', config['epochs'])
     print(f"Best epoch: {best_epoch}")
     
-    # 전체 데이터셋으로 재학습
-    print("현재: 전체 데이터셋으로 재학습 시작")
+    # # 전체 데이터셋으로 재학습
+    # print("현재: 전체 데이터셋으로 재학습 시작")
 
-    # 트레이너 초기화
-    trainer = get_trainer(config['MODEL_TYPE'], config['model'])(config, best_model)
+    # # 트레이너 초기화
+    # trainer = get_trainer(config['MODEL_TYPE'], config['model'])(config, best_model)
 
-    # 전체 데이터로 재학습
-    for epoch in range(best_epoch):
-        train_loss = trainer._train_epoch(full_train_data, epoch_idx=epoch, show_progress=False)
-        print(f"Epoch {epoch+1}/{best_epoch}, Train Loss: {train_loss:.4f}")
+    # # 전체 데이터로 재학습
+    # for epoch in range(best_epoch+1):
+    #     train_loss = trainer._train_epoch(full_train_data, epoch_idx=epoch, show_progress=False)
+    #     print(f"Epoch {epoch}/{best_epoch}, Train Loss: {train_loss:.4f}")
     
     # Inference 시작
     sample_submission.columns = ['user_id', 'item_id']
@@ -86,6 +87,6 @@ def inference(config):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     recommended_df.to_csv(
-        os.path.join(output_dir, f"output_{checkpoint_path.split('/')[-1][:-4]}_epoch{best_epoch}.csv"), 
+        os.path.join(output_dir, f"output_{checkpoint_path.split('/')[-1][:-4]}_epoch{(best_epoch)}.csv"), 
         index=False
     )
