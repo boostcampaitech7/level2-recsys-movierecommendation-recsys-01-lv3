@@ -27,19 +27,23 @@ def inference(config):
     
     checkpoint = torch.load(checkpoint_path)
     general_hyper_params = checkpoint["config"]
-    general_hyper_params['eval_args'] = {
-        'split': {'RS': [1, 0, 0]},
-        'order': 'TO',
-        'group_by': 'user',
-        'mode': {'valid': 'full', 'test': 'full'}
-    } 
+    # general_hyper_params['eval_args'] = {
+    #     'split': {'RS': [1, 0, 0]},
+    #     'order': 'TO',
+    #     'group_by': 'user',
+    #     'mode': {'valid': 'full', 'test': 'full'}
+    # } 
     
     # 전체 학습 데이터셋 구성
-    print("현재: 전체 데이터셋으로 구성")
-    full_dataset = create_dataset(general_hyper_params)
-    full_train_data, _, _ = data_preparation(general_hyper_params, full_dataset)
-    dataset = create_dataset(config)
-    _, valid_data, _ = data_preparation(config, dataset)
+    # print("현재: 전체 데이터셋으로 구성")
+    # full_dataset = create_dataset(general_hyper_params)
+    # full_train_data, _, _ = data_preparation(general_hyper_params, full_dataset)
+    # dataset = create_dataset(config)
+    # _, valid_data, _ = data_preparation(config, dataset)
+    
+    full_dataset = create_dataset(config)
+    full_train_data, valid_data, _ = data_preparation(config, full_dataset)
+
     
     init_seed(config["seed"], config["reproducibility"])
     best_model = get_model(config["model"])(config, full_train_data._dataset).to(config["device"])
@@ -70,7 +74,7 @@ def inference(config):
     test_users = [str(user) for user in test_users]
     uid_series = full_dataset.token2id(full_dataset.uid_field, test_users)
 
-    batch_size = 256
+    batch_size = 16
     recommended_df = pd.DataFrame(columns=['user', 'item'])
     for i in tqdm(range(0, len(uid_series), batch_size)):
         batch_indices = uid_series[i:i+batch_size]
