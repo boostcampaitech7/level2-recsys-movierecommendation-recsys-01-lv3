@@ -4,3 +4,5 @@ kmeans-pytorch==0.3
 pip==22.3
 recbole==1.2.0
 scipy==1.10.0
+ray==2.39.0
+mlflow==2.18.0
