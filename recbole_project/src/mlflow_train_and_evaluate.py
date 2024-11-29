@@ -31,7 +31,7 @@ def run(data_type, model_type, model):
     
     # MLflow experiment 초기화
     mlflow.set_tracking_uri("http://10.28.224.95:30696")
-    mlflow.set_experiment("RecBole_model_ALL")
+    mlflow.set_experiment("RecBole_model_seq")
     
     with mlflow.start_run(run_name=f"{model_type}_{model}") as run:
 
@@ -77,12 +77,14 @@ def run(data_type, model_type, model):
         early_stop_epoch = None
         for epoch in range(config['epochs']):
             # 1. Train Epoch 실행
+            model.train()
             train_loss = trainer._train_epoch(train_data, epoch_idx=epoch, show_progress=True)
             mlflow.log_metric("train_loss", train_loss, step=epoch)
 
             # 현재 에폭이 eval_step의 배수인지 확인
             if (epoch + 1) % config['eval_step'] == 0:
                 # 2. Validation 실행
+                model.eval()
                 valid_score, valid_result = trainer._valid_epoch(valid_data, show_progress=True)
                 for metric, value in valid_result.items():
                     sanitized_metric = metric.replace("@", "_")  # '@'를 '_'로 변경
@@ -108,6 +110,7 @@ def run(data_type, model_type, model):
                     best_valid_result = valid_result
                     best_epoch = epoch
                     stopping_counter = 0  # 개선이 되었으므로 카운터 리셋
+                    trainer._save_checkpoint(best_epoch, saved_model_file=first_checkpoint_path)
                 else:
                     stopping_counter += 1  # 개선이 없었으므로 카운터 증가       
                     
@@ -120,7 +123,7 @@ def run(data_type, model_type, model):
         # Early stopping이 발생하지 않았다면, 전체 에폭 수 저장
         if early_stop_epoch is None:
             early_stop_epoch = config['epochs'] 
-        trainer._save_checkpoint(best_epoch, saved_model_file=first_checkpoint_path)
+            
         # early_stop_epoch를 MLflow에 로그 기록
         mlflow.log_param("early_stop_epoch", early_stop_epoch) 
         mlflow.log_param("best recall_10", best_valid_score)

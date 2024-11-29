@@ -48,6 +48,7 @@ def inference(config):
     init_seed(config["seed"], config["reproducibility"])
     best_model = get_model(config["model"])(config, full_train_data._dataset).to(config["device"])
     best_model.load_state_dict(checkpoint['state_dict'])
+    best_model.load_other_parameter(checkpoint['other_parameter'])
     best_model.eval()
     best_model.to(config['device'])
     

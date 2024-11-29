@@ -1,8 +1,8 @@
 # Model Setting
 model: WideDeep
-embedding_size: 10                     # (int) The embedding size of features.
+embedding_size: 32                     # (int) The embedding size of features.
 mlp_hidden_size: [32, 16, 8]           # (list of int) The hidden size of MLP layers.
-dropout_prob: 0.1                      # (float) The dropout rate.
+dropout_prob: 0.2                      # (float) The dropout rate.
 
 # Atomic File Format
 field_separator: "\t"                  # (str) Separator of different columns in atomic files.
@@ -26,7 +26,7 @@ load_col:                              # (dict) The suffix of atomic files: (lis
 # Negative Sampling for Implicit Feedback
 train_neg_sample_args:                 # (dict) Arguments for negative sampling during training.
   distribution: 'uniform'              # (str) Sampling distribution: 'uniform' or 'popularity'
-  sample_num: 1                        # (int) Number of negative samples per positive sample.
+  sample_num: 4                        # (int) Number of negative samples per positive sample.
 valid_neg_sample_args:                 # (dict) Arguments for negative sampling during validation.
   distribution: 'uniform'              # (str) Sampling distribution: 'uniform' or 'popularity'
   sample_num: 1                        # (int) Number of negative samples per positive sample in validation.
@@ -42,17 +42,17 @@ metrics: ["Recall","NDCG"]
 topk: [10]                             # (list or int or None) The value of k for topk evaluation metrics.
 valid_metric: Recall@10                # (str) The evaluation metric for early stopping. 
 valid_metric_bigger: True              # (bool) Whether to take a bigger valid metric value as a better result.
-eval_batch_size: 4096                  # (int) The evaluation batch size.
+eval_batch_size: 131072                # (int) The evaluation batch size.
 metric_decimal_place: 4                # (int) The decimal place of metric scores.
 eval_path: './data/raw/eval/'          # sample_submission.csv 디렉토리 설정
 
 # Training Settings
-epochs: 20                             # (int) The number of training epochs.
+epochs: 30                             # (int) The number of training epochs.
 train_batch_size: 2048                 # (int) The training batch size.
 learner: adam                          # (str) The name of used optimizer.
 learning_rate: 0.001                   # (float) Learning rate.
 eval_step: 1                           # (int) The number of training epochs before an evaluation on the valid dataset.
-stopping_step: 10                      # (int) The threshold for validation-based early stopping.
+stopping_step: 3                       # (int) The threshold for validation-based early stopping.
 clip_grad_norm: ~                      # (dict) The args of clip_grad_norm_ which will clip gradient norm of model. 
 weight_decay: 0.0                      # (float) The weight decay value (L2 penalty) for optimizers.
 loss_decimal_place: 4                  # (int) The decimal place of training loss.
@@ -80,3 +80,4 @@ dataloaders_save_path: ~               # (str) The path of saved dataloaders.
 log_wandb: False                       # (bool) Whether or not to use Weights & Biases(W&B).
 wandb_project: ~                       # (str) The project to conduct experiments in W&B.
 shuffle: True                          # (bool) Whether or not to shuffle the training data before each epoch.
+dataset: dataset_context

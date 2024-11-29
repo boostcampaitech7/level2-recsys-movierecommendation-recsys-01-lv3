@@ -18,4 +18,4 @@ if __name__ == '__main__':
     config_file = [f"configs/{model_type.lower()}/{model.lower()}_config.yaml"]
     config = Config(model=model, dataset=None, config_file_list=config_file)
     
-    inference(config)    
+    inference(config)
