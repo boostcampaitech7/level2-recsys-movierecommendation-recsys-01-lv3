@@ -36,7 +36,70 @@
 
 ## 📂폴더구조
 ```
-
+# level2-recsys-movierecommendation-recsys-01-lv3/
+│
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
+│   ├── .keep 
+│   └── PULL_REQUEST_TEMPLATE.md
+│   
+├── recbole_project/
+│   ├── configs/                              # 모델 유형별 config yaml 파일                           
+│   │   ├── context/
+│   │   │   ├── dcnv2_config.yaml
+│   │   │   ├── deepfm_config.yaml
+│   │   │   ├── lightgbm_config.yaml
+│   │   │   ├── widedeep_config.yaml
+│   │   │   └── xgboost_config.yaml
+│   │   │    
+│   │   ├── general/
+│   │   │   ├── admmslim_config.yaml
+│   │   │   ├── bpr_config.yaml
+│   │   │   ├── cdae_config.yaml
+│   │   │   ├── ease_config.yaml
+│   │   │   ├── lightgcn_config.yaml
+│   │   │   ├── multidae_config.yaml
+│   │   │   ├── multivae_config.yaml
+│   │   │   ├── neumf_config.yaml
+│   │   │   ├── pop_config.yaml
+│   │   │   ├── recvae_config.yaml
+│   │   │   └── slimelastic_config.yaml
+│   │   │                        
+│   │   └── sequential/
+│   │   │   ├── ber4rec_config.yaml
+│   │   │   ├── gru4rec_config.yaml
+│   │   │   ├── gru4recf_config.yaml
+│   │   │   ├── s3rec_config.yaml
+│   │   │   ├── sasrec_config.yaml
+│   │   │   ├── sasrecf_config.yaml
+│   │   │   └── transrec_config.yaml
+│   │                          
+│   ├── mlflow_tracking_server/
+│   │   ├── mlflow.db
+│   │   └── readme.md
+│   │                              
+│   ├── src/                                  # 모델 학습/평가 및 추론 스크립트  
+│   │   ├── __init__.py                                
+│   │   ├── data_preparation.py
+│   │   ├── inference.py
+│   │   ├── mlflow_train_and_evaluate.py
+│   │   └── train_and_evaluate.py
+│   │    
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   └── utils.py
+│   │            
+│   ├── hard_voting.py                        # Hard Voting Ensemble 코드
+│   ├── hard_voting_preparation.ipynb         # Hard voting을 위한 준비 코드
+│   ├── requirements.txt
+│   ├── run.py                                # train_and_evaluate.py 실행 코드
+│   ├── run_inference.py                      # inference.py 실행 코드
+│   └── run_mlflow.py                         # mlflow_train_and_evaluate.py 실행 코드
+│
+├── .gitignore
+└── README.md
 ```
 </br>
 
