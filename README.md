@@ -34,7 +34,7 @@
 
 </br>
 
-## 📂폴더구조
+## 📂 폴더 구조
 ```
 # level2-recsys-movierecommendation-recsys-01-lv3/
 │
@@ -103,7 +103,7 @@
 ```
 </br>
 
-## 📑모델 성능 정리
+## 📑 모델 성능 정리
 <img src="https://github.com/user-attachments/assets/227f3cf3-6567-4f5c-a4ae-34c7ad24df3f"/>
 </br> </br> </br>
 
