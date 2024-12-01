@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=waving&color=0:EDDFE0,100:B7B7B7&width=max&height=250&section=header&text=Movie&nbsp;Recommendation&desc=RecSys05-오곡밥&fontSize=40&fontColor=4A4947&&fontAlignY=40)
+![header](https://capsule-render.vercel.app/api?type=waving&color=0:EDDFE0,100:B7B7B7&width=max&height=250&section=header&text=Movie&nbsp;Recommendation&desc=RecSys01-오곡밥&fontSize=40&fontColor=4A4947&&fontAlignY=40)
 
 ## 🍚 팀원 소개
 
@@ -30,7 +30,7 @@
 - **평가 지표**: Recall@10을 사용하여 예측 성능을 평가합니다.
 
 ### 프로젝트 목표
-단순한 평점 기반 추천이 아니라, 사용자 행동 패턴과 시청 이력을 반영한 implicit feedback을 중심으로 한 순차적 추천 문제를 해결하고자 합니다.
+단순한 평점 기반 추천이 아닌, 사용자 행동 패턴과 시청 이력을 반영한 implicit feedback을 중심으로 한 순차적 추천 문제를 해결하고자 합니다.
 
 </br>
 
@@ -103,6 +103,10 @@
 ```
 </br>
 
+## 📑모델 성능 정리
+<img src="https://github.com/user-attachments/assets/227f3cf3-6567-4f5c-a4ae-34c7ad24df3f"/>
+</br> </br> </br>
+
 ## ⚙️ 개발 환경
 #### OS: Linux (5.4.0-99-generic, x86_64)
 #### GPU: Tesla V100-SXM2-32GB (CUDA Version: 12.2)
@@ -115,7 +119,7 @@
 
 #### 데이터 분석 및 전처리 <img src="https://img.shields.io/badge/pandas-150458.svg?style=flat-square&logo=pandas&logoColor=white"/> <img src="https://img.shields.io/badge/NumPy-013243.svg?style=flat-square&logo=numpy&logoColor=white"/>
 
-#### 모델 학습 및 평가 
+#### 모델 학습 및 평가 <img src="https://img.shields.io/badge/RecBole-FF9E0F.svg?style=flat-square&logoColor=white"/>
   
 #### 시각화 도구 <img src="https://img.shields.io/badge/Matplotlib-3F4F75.svg?style=flat-square&logoColor=white"/> <img src="https://img.shields.io/badge/seaborn-221E68.svg?style=flat-square&logoColor=white"/>
 
